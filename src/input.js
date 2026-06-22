@@ -72,6 +72,16 @@ export class InputController {
     // Load (or initialise) bindings
     this.bindings = this._loadBindings();
 
+    // Initial orientation/touch capability check for CSS toggles
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) {
+      document.body.classList.add('is-touch');
+      document.body.classList.remove('is-no-touch');
+    } else {
+      document.body.classList.add('is-no-touch');
+      document.body.classList.remove('is-touch');
+    }
+
     this._initKeyboardListeners();
     this._initTouchListeners();
   }
@@ -159,6 +169,10 @@ export class InputController {
       const tag = document.activeElement?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
+      // Switch dynamically to keyboard controls layout if key is pressed
+      document.body.classList.remove('is-touch');
+      document.body.classList.add('is-no-touch');
+
       if (SCROLL_BLOCK.has(e.code)) e.preventDefault();
       this._handleCode(e.code, true);
     });
@@ -176,9 +190,11 @@ export class InputController {
     const btnJump  = document.getElementById('btn-jump');
     const btnDash  = document.getElementById('btn-dash');
 
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const gamepad = document.getElementById('mobile-gamepad');
-    if (gamepad && isTouchDevice) gamepad.style.display = 'flex';
+    // Switch dynamically to touch controls layout upon screen tap
+    window.addEventListener('touchstart', () => {
+      document.body.classList.add('is-touch');
+      document.body.classList.remove('is-no-touch');
+    }, { passive: true });
 
     const bind = (el, setter) => {
       if (!el) return;

@@ -35,14 +35,14 @@
             <span id="hud-cassettes" class="hud-stat-value">0 / 0</span>
           </div>
 
-          <div class="hud-stat" style="margin-left: 20px;">
-            <span class="hud-score-label" style="margin-right: 5px;">LIVES:</span>
-            <span id="hud-lives" style="color: #ff007f; text-shadow: 0 0 5px #ff007f; font-weight: 700;">▲ ▲ ▲</span>
+          <div class="hud-stat hud-lives-stat">
+            <span class="hud-score-label hud-lives-label">LIVES:</span>
+            <span id="hud-lives" class="hud-lives-value">▲ ▲ ▲</span>
           </div>
         </div>
 
         <!-- Centre: Level name -->
-        <div class="hud-panel">
+        <div id="hud-level-panel" class="hud-panel">
           <span class="hud-score-label" id="hud-level-label">LEVEL 1</span>
         </div>
 
@@ -54,6 +54,11 @@
           </div>
           <span class="hud-dash-icon">⚡</span>
         </div>
+
+        <!-- Pause Button (for mobile/tablet and clickable on PC) -->
+        <button id="hud-pause-btn" class="hud-panel hud-btn" aria-label="Pause Game">
+          <span>⏸</span>
+        </button>
 
         <!-- Progress bar (bottom of HUD) -->
         <div class="progress-bar-container">
@@ -68,7 +73,8 @@
         <p>Navigate a retro-cybernetic synthwave grid. Dodge deadly neon spikes, outrun moving laser hazards, and
           collect cassette tapes to charge the system core.</p>
 
-        <div class="instructions-grid">
+        <!-- Keyboard instructions -->
+        <div class="instructions-grid keyboard-instructions">
           <div class="instruction-item">
             <div class="key-cap">A</div>
             <div class="key-cap">◀</div>
@@ -93,6 +99,25 @@
             <div class="key-cap">ESC</div>
             <div class="key-cap">P</div>
             <span class="instruction-text">Pause / Resume</span>
+          </div>
+        </div>
+
+        <!-- Touch instructions -->
+        <div class="instructions-touch touch-instructions">
+          <p class="touch-desc">TAP ON-SCREEN CONTROLS TO OUTRUN THE GRID</p>
+          <div class="touch-help-grid">
+            <div class="touch-help-item">
+              <span class="touch-help-icon">◀ ◀</span>
+              <span class="touch-help-text">Move Left / Right</span>
+            </div>
+            <div class="touch-help-item">
+              <span class="touch-help-icon" style="color: var(--neon-magenta); text-shadow: 0 0 5px var(--neon-magenta);">▲</span>
+              <span class="touch-help-text">Hold to Jump Higher</span>
+            </div>
+            <div class="touch-help-item">
+              <span class="touch-help-icon" style="color: var(--neon-yellow); text-shadow: 0 0 5px var(--neon-yellow);">⚡</span>
+              <span class="touch-help-text">Mid-Air Dash (Once)</span>
+            </div>
           </div>
         </div>
 
@@ -218,6 +243,15 @@
         <div id="btn-dash" class="touch-btn dash-btn"  role="button" aria-label="Dash">⚡</div>
         <div id="btn-jump" class="touch-btn jump-btn"  role="button" aria-label="Jump">▲</div>
       </div>
+    </div>
+
+    <!-- ═══════════════════ Orientation Warning Overlay ═══════════════════ -->
+    <div id="orientation-overlay" aria-hidden="true">
+      <div class="phone-icon-container">
+        <div class="phone-icon"></div>
+      </div>
+      <h1 class="warning-title">GRID DE-SYNC</h1>
+      <p class="warning-text">ROTATE TO LANDSCAPE FOR CYBERNETIC COUPLING</p>
     </div>
 
   </div><!-- #game-container -->

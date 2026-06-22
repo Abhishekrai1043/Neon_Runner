@@ -37,6 +37,7 @@ html, body {
   background-color: var(--bg-color);
   font-family: var(--font-body);
   color: #fff;
+  touch-action: none; /* Block default gesture zooming and browser navigation swipes */
 }
 
 /* ── Game Container ────────────────────────────────────────────────────────── */
@@ -387,6 +388,50 @@ canvas {
   text-shadow: 0 0 5px var(--neon-yellow);
 }
 
+.hud-lives-stat {
+  margin-left: 20px;
+}
+
+.hud-lives-label {
+  margin-right: 5px;
+}
+
+.hud-lives-value {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 5px var(--neon-magenta);
+  font-weight: 700;
+}
+
+.hud-btn {
+  cursor: pointer;
+  pointer-events: auto; /* Enable clicking on HUD overlay */
+  background: rgba(13, 2, 23, 0.75);
+  border: 1px solid var(--neon-magenta);
+  color: var(--neon-magenta);
+  text-shadow: 0 0 5px var(--neon-magenta);
+  box-shadow: 0 0 8px rgba(255, 0, 127, 0.25);
+  font-weight: 900;
+  padding: 10px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all var(--transition-snappy);
+}
+
+.hud-btn:hover {
+  background: var(--neon-magenta);
+  color: #fff;
+  text-shadow: none;
+  box-shadow: 0 0 15px var(--neon-magenta);
+  transform: scale(1.06);
+}
+
+.hud-btn:active {
+  transform: scale(0.94);
+}
+
 /* ── Dash Cooldown HUD Panel ─────────────────────────────────────────────── */
 .hud-dash-panel {
   gap: 10px;
@@ -626,11 +671,16 @@ canvas {
   bottom: max(24px, env(safe-area-inset-bottom));
   left: 0;
   width: 100%;
-  display: none;         /* shown via media query / JS on touch devices */
+  display: none;         /* Dynamically shown on .is-touch */
   justify-content: space-between;
-  padding: 0 28px;
+  padding: 0 32px;
   pointer-events: none;
   z-index: 20;
+  transition: opacity 0.3s ease;
+}
+
+.is-touch #mobile-gamepad {
+  display: flex;
 }
 
 .control-group {
@@ -640,68 +690,74 @@ canvas {
 }
 
 .touch-btn {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  background: rgba(13, 2, 23, 0.65);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(13, 2, 23, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 2px solid var(--neon-cyan);
-  box-shadow: 0 0 14px rgba(0, 240, 255, 0.18), inset 0 0 10px rgba(0, 240, 255, 0.08);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.22), inset 0 0 10px rgba(0, 240, 255, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: var(--font-display);
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   color: var(--neon-cyan);
-  text-shadow: 0 0 5px var(--neon-cyan);
+  text-shadow: 0 0 6px var(--neon-cyan);
   cursor: pointer;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.08s ease, background 0.08s ease;
-  /* Prevent text selection on rapid taps */
+  transition: transform 0.06s ease, background 0.06s ease, box-shadow 0.06s ease;
   user-select: none;
   -webkit-user-select: none;
 }
 
 .touch-btn:active {
-  transform: scale(0.88);
-  background: rgba(0, 240, 255, 0.22);
+  transform: scale(0.86);
+  background: var(--neon-cyan);
+  color: var(--bg-color);
   border-color: #fff;
-  box-shadow: 0 0 24px var(--neon-cyan);
+  box-shadow: 0 0 26px var(--neon-cyan), 0 0 10px #fff;
+  text-shadow: none;
 }
 
 /* Jump button — larger + magenta */
 .touch-btn.jump-btn {
-  width: 78px;
-  height: 78px;
+  width: 82px;
+  height: 82px;
   border-color: var(--neon-magenta);
   color: var(--neon-magenta);
-  text-shadow: 0 0 5px var(--neon-magenta);
-  box-shadow: 0 0 14px rgba(255, 0, 127, 0.18), inset 0 0 10px rgba(255, 0, 127, 0.08);
-  font-size: 1.9rem;
+  text-shadow: 0 0 6px var(--neon-magenta);
+  box-shadow: 0 0 14px rgba(255, 0, 127, 0.22), inset 0 0 10px rgba(255, 0, 127, 0.1);
+  font-size: 2rem;
 }
 
 .touch-btn.jump-btn:active {
-  background: rgba(255, 0, 127, 0.22);
-  box-shadow: 0 0 24px var(--neon-magenta);
+  background: var(--neon-magenta);
+  color: #fff;
+  border-color: #fff;
+  box-shadow: 0 0 26px var(--neon-magenta), 0 0 10px #fff;
+  text-shadow: none;
 }
 
 /* Dash button — neon yellow/orange */
 .touch-btn.dash-btn {
-  width: 64px;
-  height: 64px;
+  width: 66px;
+  height: 66px;
   border-color: var(--neon-yellow);
   color: var(--neon-yellow);
-  text-shadow: 0 0 6px var(--neon-yellow);
-  box-shadow: 0 0 14px rgba(255, 184, 0, 0.2), inset 0 0 10px rgba(255, 184, 0, 0.08);
-  font-size: 1.5rem;
+  text-shadow: 0 0 7px var(--neon-yellow);
+  box-shadow: 0 0 14px rgba(255, 184, 0, 0.22), inset 0 0 10px rgba(255, 184, 0, 0.1);
+  font-size: 1.6rem;
 }
 
 .touch-btn.dash-btn:active {
-  background: rgba(255, 184, 0, 0.22);
+  background: var(--neon-yellow);
+  color: var(--bg-color);
   border-color: #fff;
-  box-shadow: 0 0 24px var(--neon-yellow);
+  box-shadow: 0 0 26px var(--neon-yellow), 0 0 10px #fff;
+  text-shadow: none;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -717,54 +773,198 @@ canvas {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Responsive: Mobile / Tablet (≤ 1024px) — show gamepad, compact HUD
+   Touch vs Keyboard instructions visibility
    ═══════════════════════════════════════════════════════════════════════════ */
-@media (max-width: 1024px) {
-  #mobile-gamepad {
+.touch-instructions {
+  display: none;
+}
+.is-touch .keyboard-instructions {
+  display: none !important;
+}
+.is-touch .touch-instructions {
+  display: block !important;
+}
+
+.touch-desc {
+  font-size: 0.82rem;
+  letter-spacing: 1.5px;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px var(--neon-cyan);
+  margin-bottom: 16px;
+  text-align: center;
+  font-family: var(--font-display);
+}
+
+.touch-help-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px 20px;
+}
+
+.touch-help-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.touch-help-icon {
+  font-family: var(--font-display);
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px var(--neon-cyan);
+  width: 36px;
+  text-align: center;
+}
+
+.touch-help-text {
+  font-size: 0.85rem;
+  color: #c9c1d9;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Orientation Warning Overlay
+   ═══════════════════════════════════════════════════════════════════════════ */
+#orientation-overlay {
+  display: none;
+}
+
+@media (orientation: portrait) {
+  #orientation-overlay {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, #1a052e 0%, #0d0217 100%);
+    z-index: 10000; /* Must display above everything else including CRT overlay */
+    color: #fff;
+    text-align: center;
+    padding: 30px;
+    font-family: var(--font-display);
+  }
+
+  .phone-icon-container {
+    margin-bottom: 28px;
+    position: relative;
+    width: 60px;
+    height: 100px;
+  }
+
+  .phone-icon {
+    width: 50px;
+    height: 90px;
+    border: 3px solid var(--neon-cyan);
+    border-radius: 8px;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    animation: rotateDevice 2.2s infinite ease-in-out;
+  }
+
+  .phone-icon::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--neon-cyan);
+    border-radius: 50%;
+  }
+
+  .warning-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--neon-magenta);
+    text-shadow: 0 0 10px var(--neon-magenta);
+    margin-bottom: 12px;
+    letter-spacing: 3px;
+  }
+
+  .warning-text {
+    font-size: 0.85rem;
+    color: #c9c1d9;
+    letter-spacing: 2px;
+    line-height: 1.5;
+    max-width: 280px;
+  }
+}
+
+@keyframes rotateDevice {
+  0% { transform: rotate(0deg); }
+  35% { transform: rotate(-90deg); }
+  65% { transform: rotate(-90deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Responsive: Mobile / Tablet (≤ 768px) — HUD compactness
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  #hud {
+    padding: 10px 14px;
+    gap: 6px;
   }
 
   .hud-panel {
-    padding: 7px 12px;
+    padding: 6px 12px;
+    gap: 6px;
+  }
+
+  .hud-score-label {
+    font-size: 0.65rem;
   }
 
   .hud-score-value {
     font-size: 1rem;
+    min-width: 45px;
+  }
+
+  .hud-stat-value {
+    font-size: 0.8rem;
+  }
+
+  .hud-lives-stat {
+    margin-left: 10px;
+  }
+
+  #hud-level-panel {
+    display: none !important; /* Hide central level panel to avoid overlap on tiny viewports */
+  }
+
+  .hud-dash-panel {
+    padding: 6px 8px;
+  }
+
+  .hud-dash-track {
+    width: 44px;
+  }
+
+  .hud-btn {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
   }
 
   .menu-panel h1 {
     font-size: 2rem;
   }
+}
 
+@media (max-width: 1024px) {
   .instructions-grid {
     grid-template-columns: 1fr;
     gap: 8px;
-  }
-
-  /* Slightly larger touch targets on small screens */
-  .touch-btn {
-    width: 76px;
-    height: 76px;
-    font-size: 1.8rem;
-  }
-
-  .touch-btn.jump-btn {
-    width: 84px;
-    height: 84px;
-  }
-
-  .touch-btn.dash-btn {
-    width: 68px;
-    height: 68px;
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   Desktop (> 1024px) — hide gamepad
-   ═══════════════════════════════════════════════════════════════════════════ */
-@media (min-width: 1025px) {
-  #mobile-gamepad {
-    display: none !important;
   }
 }
 
@@ -782,6 +982,10 @@ canvas {
   }
 
   .blinking-text {
+    animation: none;
+  }
+
+  .phone-icon {
     animation: none;
   }
 }

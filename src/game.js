@@ -333,6 +333,16 @@ class Game {
       this._startGame();
     });
 
+    const hudPause = $('hud-pause-btn');
+    if (hudPause) {
+      hudPause.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this._state === GameState.PLAYING) {
+          this.setState(GameState.PAUSED);
+        }
+      });
+    }
+
     const pauseNewGame = $('pause-new-game-btn');
     if (pauseNewGame) {
       pauseNewGame.addEventListener('click', () => {
