@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description"
+    content="NEON RUNNER — A retro synthwave arcade platformer. Outrun the neon grid, collect cassettes, and dash through cybernetic obstacles.">
+  <title>NEON RUNNER: OUTRUN THE GRID</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="game-container">
+
+    <!-- Main Game Canvas -->
+    <canvas id="game-canvas" aria-label="Neon Runner game canvas"></canvas>
+
+    <!-- CRT Scanline Overlay — purely decorative, pointer-events: none -->
+    <div id="crt-overlay" aria-hidden="true"></div>
+
+    <!-- UI Overlay Layer -->
+    <div class="ui-layer">
+
+      <!-- ═══════════════════ HUD ═══════════════════ -->
+      <div id="hud" style="display:none;">
+        <!-- Left panel: Score + Cassettes + Lives -->
+        <div class="hud-panel">
+          <span class="hud-score-label">SCORE:</span>
+          <span id="hud-score" class="hud-score-value">00000</span>
+
+          <div class="hud-stat">
+            <div class="hud-stat-icon"></div>
+            <span id="hud-cassettes" class="hud-stat-value">0 / 0</span>
+          </div>
+
+          <div class="hud-stat" style="margin-left: 20px;">
+            <span class="hud-score-label" style="margin-right: 5px;">LIVES:</span>
+            <span id="hud-lives" style="color: #ff007f; text-shadow: 0 0 5px #ff007f; font-weight: 700;">▲ ▲ ▲</span>
+          </div>
+        </div>
+
+        <!-- Centre: Level name -->
+        <div class="hud-panel">
+          <span class="hud-score-label" id="hud-level-label">LEVEL 1</span>
+        </div>
+
+        <!-- Right panel: Dash cooldown -->
+        <div class="hud-panel hud-dash-panel">
+          <span class="hud-score-label" style="font-size:0.7rem; letter-spacing:1px;">DASH</span>
+          <div class="hud-dash-track">
+            <div id="hud-dash-bar"></div>
+          </div>
+          <span class="hud-dash-icon">⚡</span>
+        </div>
+
+        <!-- Progress bar (bottom of HUD) -->
+        <div class="progress-bar-container">
+          <div id="progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ Start Menu ═══════════════════ -->
+      <div id="start-menu" class="menu-panel active" role="dialog" aria-label="Start Menu">
+        <h1>NEON RUNNER</h1>
+        <h2>OUTRUN THE GRID</h2>
+        <p>Navigate a retro-cybernetic synthwave grid. Dodge deadly neon spikes, outrun moving laser hazards, and
+          collect cassette tapes to charge the system core.</p>
+
+        <div class="instructions-grid">
+          <div class="instruction-item">
+            <div class="key-cap">A</div>
+            <div class="key-cap">◀</div>
+            <span class="instruction-text">Move Left</span>
+          </div>
+          <div class="instruction-item">
+            <div class="key-cap">D</div>
+            <div class="key-cap">▶</div>
+            <span class="instruction-text">Move Right</span>
+          </div>
+          <div class="instruction-item">
+            <div class="key-cap">SPACE</div>
+            <div class="key-cap">▲</div>
+            <span class="instruction-text">Jump (hold = higher)</span>
+          </div>
+          <div class="instruction-item">
+            <div class="key-cap">SHIFT</div>
+            <div class="key-cap">⚡</div>
+            <span class="instruction-text">Dash (mid-air once)</span>
+          </div>
+          <div class="instruction-item">
+            <div class="key-cap">ESC</div>
+            <div class="key-cap">P</div>
+            <span class="instruction-text">Pause / Resume</span>
+          </div>
+        </div>
+
+        <button id="start-btn" class="btn btn-magenta">INITIALIZE SYSTEM</button>
+      </div>
+
+      <!-- ═══════════════════ Pause Sidebar ═══════════════════ -->
+      <div id="pause-menu" class="sidebar-panel" role="dialog" aria-label="Pause Menu">
+        <div class="sidebar-header">
+          <h1>NEON RUNNER</h1>
+          <h2>SYSTEM PAUSED</h2>
+        </div>
+
+        <p class="sidebar-desc">Grid progression halted. Select sub-routine to proceed.</p>
+
+        <div class="menu-btn-group">
+          <button id="resume-btn" class="btn btn-magenta">RESUME SYSTEM</button>
+          <button id="pause-volume-btn" class="btn">VOLUME: HIGH</button>
+          <button id="pause-controls-btn" class="btn">⌨ CONTROLS</button>
+          <button id="pause-new-game-btn" class="btn">NEW GAME</button>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="arcade-leaderboard">
+          <h3>HIGH SCORES</h3>
+          <div class="leaderboard-container" id="leaderboard-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="blinking-text">INSERT COIN</div>
+          <div class="cabinet-info">CABINET SYSTEM v2.00</div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════ Game Over / Complete Screen ═══════════════════ -->
+      <div id="game-over-menu" class="menu-panel" role="dialog" aria-label="Game Over">
+        <h1 id="game-over-title">SYSTEM FAULT</h1>
+        <p id="game-over-message">Connection terminated. Runner de-synchronized from grid.</p>
+
+        <div style="margin-bottom: 30px;">
+          <div style="font-family: 'Orbitron'; font-size: 1.1rem; color: #ff007f; margin-bottom: 12px; text-shadow: 0 0 5px #ff007f;">
+            FINAL DATA SYNC
+          </div>
+          <div style="display: flex; justify-content: center; gap: 40px;">
+            <div>
+              <div style="font-size: 0.75rem; color: #d1c9df; margin-bottom: 4px;">SCORE</div>
+              <div id="final-score"
+                style="font-family: 'Orbitron'; font-size: 1.9rem; font-weight: 700; color: #fff;">0</div>
+            </div>
+            <div>
+              <div style="font-size: 0.75rem; color: #d1c9df; margin-bottom: 4px;">CASSETTES</div>
+              <div id="final-cassettes"
+                style="font-family: 'Orbitron'; font-size: 1.9rem; font-weight: 700; color: #ffae00;">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arcade 3-char Name Entry -->
+        <div id="arcade-name-entry" style="margin-bottom: 28px;">
+          <div
+            style="font-family: 'Orbitron'; font-size: 0.85rem; color: #00f0ff; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 0 5px #00f0ff;">
+            SYNC NAME TO GRID
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 12px;">
+            <input
+              type="text"
+              id="arcade-name-input"
+              maxlength="3"
+              placeholder="AAA"
+              value="AAA"
+              autocomplete="off"
+              spellcheck="false"
+              class="arcade-input"
+            >
+            <button id="arcade-submit-btn" class="btn btn-magenta arcade-submit-btn">SYNC</button>
+          </div>
+          <div id="arcade-submit-feedback" class="arcade-feedback" style="display:none;">
+            CORE SYNCHRONIZED
+          </div>
+        </div>
+
+        <button id="restart-btn" class="btn btn-magenta">RE-BOOT RUNNER</button>
+      </div>
+
+      <!-- ═══════════════════ Controls Remapping Overlay ═══════════════════ -->
+      <div id="controls-panel" class="controls-overlay" aria-hidden="true" role="dialog" aria-label="Control Bindings">
+        <div class="controls-modal">
+
+          <div class="controls-modal-header">
+            <span class="controls-accent-bar"></span>
+            <div>
+              <h2 class="controls-title">CONTROL BINDINGS</h2>
+              <p class="controls-subtitle">Click a key slot, then press any key to rebind</p>
+            </div>
+          </div>
+
+          <!-- Dynamic rows injected by JS -->
+          <div id="controls-table" class="controls-table"></div>
+
+          <!-- Conflict / status message -->
+          <div id="controls-status" class="controls-status" aria-live="polite"></div>
+
+          <div class="controls-footer">
+            <button id="controls-reset-btn" class="btn">↺ RESET DEFAULTS</button>
+            <button id="controls-close-btn" class="btn btn-magenta">✕ CLOSE</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .ui-layer -->
+
+    <!-- ═══════════════════ Virtual Mobile Gamepad ═══════════════════ -->
+    <div id="mobile-gamepad" aria-label="Virtual Gamepad" role="group">
+      <!-- Left side: directional -->
+      <div class="control-group">
+        <div id="btn-left"  class="touch-btn" role="button" aria-label="Move Left">◀</div>
+        <div id="btn-right" class="touch-btn" role="button" aria-label="Move Right">▶</div>
+      </div>
+      <!-- Right side: actions -->
+      <div class="control-group">
+        <div id="btn-dash" class="touch-btn dash-btn"  role="button" aria-label="Dash">⚡</div>
+        <div id="btn-jump" class="touch-btn jump-btn"  role="button" aria-label="Jump">▲</div>
+      </div>
+    </div>
+
+  </div><!-- #game-container -->
+
+  <script type="module" src="src/game.js"></script>
+</body>
+
+</html>
