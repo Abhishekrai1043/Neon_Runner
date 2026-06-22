@@ -232,7 +232,7 @@ class Game {
     this.audio         = new AudioSynth();
 
     // State Machine
-    this._state = GameState.MENU;
+    this._state = null;
 
     // Game data
     this.lives              = 3;
@@ -254,6 +254,8 @@ class Game {
     this._setupResizeHandler();
     this._setupInputCallbacks();
 
+    this.setState(GameState.MENU);
+
     this.resize();
     this.lastTime = 0;
     requestAnimationFrame((t) => this.loop(t));
@@ -274,6 +276,29 @@ class Game {
     // (none currently needed — handled in specific methods below)
 
     this._state = newState;
+
+    // Synchronize state classes on body for CSS-driven layout rules
+    const body = document.body;
+    body.classList.remove('state-menu', 'state-playing', 'state-paused', 'state-gameover', 'state-complete');
+    switch (newState) {
+      case GameState.MENU:
+        body.classList.add('state-menu');
+        break;
+      case GameState.PLAYING:
+      case GameState.PLAYER_DYING:
+      case GameState.LEVEL_CLEAR:
+        body.classList.add('state-playing');
+        break;
+      case GameState.PAUSED:
+        body.classList.add('state-paused');
+        break;
+      case GameState.GAME_OVER:
+        body.classList.add('state-gameover');
+        break;
+      case GameState.COMPLETE:
+        body.classList.add('state-complete');
+        break;
+    }
 
     // ── Entry actions ────────────────────────────────────────────────────────
     switch (newState) {

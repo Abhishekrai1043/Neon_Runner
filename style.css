@@ -679,8 +679,12 @@ canvas {
   transition: opacity 0.3s ease;
 }
 
-.is-touch #mobile-gamepad {
+.is-touch.state-playing #mobile-gamepad {
   display: flex;
+}
+
+.is-touch #mobile-gamepad {
+  display: none; /* Hide during menus, pause, gameover, and completion screens */
 }
 
 .control-group {
@@ -1173,4 +1177,95 @@ canvas {
 
 @media (prefers-reduced-motion: reduce) {
   .key-rebind-btn.listening { animation: none; border-color: var(--neon-yellow); box-shadow: 0 0 16px rgba(255,184,0,0.4); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Mobile Landscape Compact Menus (height <= 500px)
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-height: 500px) {
+  .menu-panel {
+    padding: 18px 28px;
+    max-width: 480px;
+    width: 95%;
+  }
+
+  .menu-panel h1 {
+    font-size: 1.7rem;
+    margin-bottom: 2px;
+    letter-spacing: 2px;
+  }
+
+  .menu-panel h2 {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+
+  .menu-panel p {
+    display: none !important; /* Hide description paragraph to save vital vertical space in landscape */
+  }
+
+  .touch-help-grid {
+    margin-bottom: 12px;
+    padding: 8px 16px;
+    gap: 8px;
+  }
+
+  .instructions-grid {
+    margin-bottom: 12px;
+    gap: 6px;
+  }
+
+  .touch-desc {
+    margin-bottom: 8px;
+    font-size: 0.72rem;
+  }
+
+  #arcade-name-entry {
+    margin-bottom: 12px !important;
+  }
+
+  #game-over-menu > div {
+    margin-bottom: 12px !important;
+  }
+
+  .arcade-input {
+    font-size: 1.2rem;
+    width: 90px;
+    padding: 4px;
+  }
+
+  .arcade-submit-btn {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  #start-btn, #restart-btn {
+    padding: 8px 24px;
+    font-size: 0.85rem;
+    min-height: 38px;
+  }
+
+  /* Compact controls remapping overlay */
+  .controls-modal {
+    padding: 16px 24px;
+  }
+  .controls-modal-header {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+  }
+  .controls-accent-bar {
+    height: 30px;
+  }
+  .controls-title {
+    font-size: 1.1rem;
+  }
+  .controls-row {
+    padding: 6px 10px;
+  }
+  .key-rebind-btn {
+    min-height: 28px;
+    font-size: 0.65rem;
+    padding: 4px 2px;
+  }
 }
