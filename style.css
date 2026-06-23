@@ -1064,8 +1064,41 @@ canvas {
     padding: 6px;
   }
 
+  .menu-panel {
+    padding: 20px 24px;
+    max-width: 90vw;
+  }
+
   .menu-panel h1 {
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    margin-bottom: 6px;
+  }
+
+  .menu-panel h2 {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    margin-bottom: 10px;
+  }
+
+  .menu-panel p {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+  }
+
+  .menu-btn-group {
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+
+  #game-over-menu.keyboard-active > *:not(.arcade-entry) {
+    display: none !important;
+  }
+  #game-over-menu.keyboard-active {
+    top: 25%;
+    transform: translate(-50%, -25%) scale(1);
   }
 
   /* ── Mobile Sidebar: compact + scrollable ────────────────────────── */

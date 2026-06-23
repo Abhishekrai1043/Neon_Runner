@@ -468,6 +468,14 @@ class Game {
           arcadeInput.value = arcadeInput.value.toUpperCase().slice(0, 7);
         }, 0);
       });
+      arcadeInput.addEventListener('focus', () => {
+        const gm = $('game-over-menu');
+        if (gm) gm.classList.add('keyboard-active');
+      });
+      arcadeInput.addEventListener('blur', () => {
+        const gm = $('game-over-menu');
+        if (gm) gm.classList.remove('keyboard-active');
+      });
     }
 
     // ── Controls Remapping ──────────────────────────────────────────────────
