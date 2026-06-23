@@ -7,9 +7,11 @@ export class LayoutEditor {
     this.dragOffset = { x: 0, y: 0 };
     
     this.targets = [
-      'mobile-left-group',
-      'mobile-right-group',
+      'btn-left',
+      'btn-right',
       'joystick-container',
+      'btn-dash',
+      'btn-jump',
       'hud-left-group',
       'hud-level-panel',
       'hud-right-cluster'
@@ -24,8 +26,22 @@ export class LayoutEditor {
     const btnReset = document.getElementById('le-reset-btn');
     const btnSave = document.getElementById('le-save-btn');
     
-    if (btnReset) btnReset.addEventListener('click', () => this.resetLayout());
-    if (btnSave) btnSave.addEventListener('click', () => this.closeEditor());
+    if (btnReset) {
+      btnReset.addEventListener('click', () => {
+        this.resetLayout();
+      });
+    }
+    
+    if (btnSave) {
+      btnSave.addEventListener('click', () => {
+        this.closeEditor(true);
+      });
+    }
+
+    const btnDialogDiscard = document.getElementById('btn-dialog-discard');
+    const btnDialogSave = document.getElementById('btn-dialog-save');
+    if (btnDialogDiscard) btnDialogDiscard.addEventListener('click', () => this.closeEditor(false));
+    if (btnDialogSave) btnDialogSave.addEventListener('click', () => this.closeEditor(true));
 
     document.querySelectorAll('.le-preset-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
@@ -61,8 +77,6 @@ export class LayoutEditor {
     // Force show gamepad and HUD during edit
     document.getElementById('mobile-gamepad').style.display = 'block';
     document.getElementById('hud').style.display = 'block';
-    // Remove pointer-events none from gamepad wrapper so we can drag it
-    document.getElementById('mobile-gamepad').style.pointerEvents = 'auto';
 
     // Hide pause menu if open
     const pm = document.getElementById('pause-menu');
@@ -91,12 +105,19 @@ export class LayoutEditor {
     });
   }
 
-  closeEditor() {
+  promptCancel() {
+    const dialog = document.getElementById('layout-cancel-dialog');
+    if (dialog) dialog.style.display = 'flex';
+  }
+
+  closeEditor(save = true) {
     this.isActive = false;
+    
+    const dialog = document.getElementById('layout-cancel-dialog');
+    if (dialog) dialog.style.display = 'none';
+
     if (this.overlay) this.overlay.style.display = 'none';
 
-    document.getElementById('mobile-gamepad').style.pointerEvents = '';
-    
     // Hide gamepad if not on touch
     if (!document.body.classList.contains('is-touch')) {
        document.getElementById('mobile-gamepad').style.display = '';
@@ -116,7 +137,9 @@ export class LayoutEditor {
       }
     });
 
-    this._saveLayout();
+    if (save) {
+      this._saveLayout();
+    }
     this.applyLayout(); // re-apply properly
 
     if (this.onDoneCallback) this.onDoneCallback();
@@ -174,15 +197,19 @@ export class LayoutEditor {
     // Some rough predefined positions
     const presets = {
       '2thumb': {
-        'mobile-left-group': { left: '32px', top: 'calc(100% - 110px)' },
-        'mobile-right-group': { left: 'calc(100% - 190px)', top: 'calc(100% - 110px)' },
+        'btn-left': { left: '32px', top: 'calc(100% - 110px)' },
+        'btn-right': { left: '120px', top: 'calc(100% - 110px)' },
+        'btn-dash': { left: 'calc(100% - 190px)', top: 'calc(100% - 110px)' },
+        'btn-jump': { left: 'calc(100% - 90px)', top: 'calc(100% - 110px)' },
         'joystick-container': { left: '32px', top: 'calc(100% - 150px)' },
         'hud-left-group': { left: '16px', top: '16px' },
         'hud-right-cluster': { left: 'calc(100% - 130px)', top: '16px' }
       },
       'claw': {
-        'mobile-left-group': { left: '32px', top: 'calc(100% - 110px)' },
-        'mobile-right-group': { left: '16px', top: '60px' }, // Moved up for left index finger
+        'btn-left': { left: '32px', top: 'calc(100% - 110px)' },
+        'btn-right': { left: '120px', top: 'calc(100% - 110px)' },
+        'btn-dash': { left: '110px', top: '60px' },
+        'btn-jump': { left: '16px', top: '60px' },
         'joystick-container': { left: '32px', top: 'calc(100% - 150px)' },
         'hud-left-group': { left: '16px', top: '16px' },
         'hud-right-cluster': { left: 'calc(100% - 130px)', top: '16px' }

@@ -342,6 +342,12 @@ class Game {
   // ── Bootstrap ──────────────────────────────────────────────────────────────
   _setupInputCallbacks() {
     this.input.onPause = () => {
+      // Intercept ESC / Pause if layout editor is active
+      if (this.layoutEditor && this.layoutEditor.isActive) {
+        this.layoutEditor.promptCancel();
+        return;
+      }
+
       if (this._state === GameState.PLAYING) {
         this.setState(GameState.PAUSED);
       } else if (this._state === GameState.PAUSED) {

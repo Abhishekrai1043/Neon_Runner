@@ -30,7 +30,7 @@
         <div class="hud-bar">
 
           <!-- Left: Score | Data | Lives -->
-          <div class="hud-group hud-left-group">
+          <div id="hud-left-group" class="hud-group hud-left-group">
             <div class="hud-cell">
               <span class="hud-cell-label">SCORE</span>
               <span id="hud-score" class="hud-cell-val hud-score-val">00000</span>
@@ -54,7 +54,7 @@
           </div>
 
           <!-- Right: Dash meter + Pause -->
-          <div class="hud-right-cluster">
+          <div id="hud-right-cluster" class="hud-right-cluster">
             <div class="hud-group hud-dash-group">
               <span class="hud-cell-label">DASH</span>
               <div class="hud-dash-row">
@@ -288,23 +288,31 @@
         </div>
       </div>
 
+      <!-- ═══════════════════ Layout Editor Cancel Dialog ═══════════════════ -->
+      <div id="layout-cancel-dialog" class="menu-panel layer-modal" role="dialog" style="display: none; z-index: 2000;">
+        <h2 style="color: var(--neon-magenta); text-shadow: 0 0 10px var(--neon-magenta);">SAVE ALTERED LAYOUT?</h2>
+        <p style="margin: 20px 0; text-align: center;">Do you want to save your layout changes before exiting?</p>
+        <div class="menu-btn-group" style="flex-direction: row; justify-content: center; gap: 20px;">
+          <button id="btn-dialog-discard" class="btn">DISCARD</button>
+          <button id="btn-dialog-save" class="btn btn-magenta">SAVE</button>
+        </div>
+      </div>
+
     </div><!-- .ui-layer -->
 
     <!-- ═══════════════════ Virtual Mobile Gamepad ═══════════════════ -->
     <div id="mobile-gamepad" aria-label="Virtual Gamepad" role="group">
       <!-- Left side: directional -->
-      <div id="mobile-left-group" class="control-group mobile-ctrl-group">
-        <div id="btn-left"  class="touch-btn" role="button" aria-label="Move Left">◀</div>
-        <div id="btn-right" class="touch-btn" role="button" aria-label="Move Right">▶</div>
-      </div>
+      <div id="btn-left"  class="touch-btn layout-draggable-btn" role="button" aria-label="Move Left">◀</div>
+      <div id="btn-right" class="touch-btn layout-draggable-btn" role="button" aria-label="Move Right">▶</div>
+      
       <div id="joystick-container" class="joystick-base mobile-ctrl-group" style="display: none;">
         <div id="joystick-handle" class="joystick-thumb"></div>
       </div>
+      
       <!-- Right side: actions -->
-      <div id="mobile-right-group" class="control-group mobile-ctrl-group">
-        <div id="btn-dash" class="touch-btn dash-btn"  role="button" aria-label="Dash">⚡</div>
-        <div id="btn-jump" class="touch-btn jump-btn"  role="button" aria-label="Jump">▲</div>
-      </div>
+      <div id="btn-dash" class="touch-btn dash-btn layout-draggable-btn"  role="button" aria-label="Dash">⚡</div>
+      <div id="btn-jump" class="touch-btn jump-btn layout-draggable-btn"  role="button" aria-label="Jump">▲</div>
     </div>
 
     <!-- ═══════════════════ Orientation Warning Overlay ═══════════════════ -->
