@@ -25,42 +25,49 @@
 
       <!-- ═══════════════════ HUD ═══════════════════ -->
       <div id="hud" style="display:none;">
-        <!-- Left panel: Score + Cassettes + Lives -->
-        <div class="hud-panel">
-          <span class="hud-score-label">SCORE:</span>
-          <span id="hud-score" class="hud-score-value">00000</span>
 
-          <div class="hud-stat">
-            <div class="hud-stat-icon"></div>
-            <span id="hud-cassettes" class="hud-stat-value">0 / 0</span>
+        <!-- ── Top bar ──────────────────────────────────────────── -->
+        <div class="hud-bar">
+
+          <!-- Left: Score | Data | Lives -->
+          <div class="hud-group hud-left-group">
+            <div class="hud-cell">
+              <span class="hud-cell-label">SCORE</span>
+              <span id="hud-score" class="hud-cell-val hud-score-val">00000</span>
+            </div>
+            <div class="hud-cell-sep"></div>
+            <div class="hud-cell">
+              <span class="hud-cell-label">DATA</span>
+              <span id="hud-cassettes" class="hud-cell-val hud-cassette-val">0 / 0</span>
+            </div>
+            <div class="hud-cell-sep"></div>
+            <div class="hud-cell">
+              <span class="hud-cell-label">LIVES</span>
+              <span id="hud-lives" class="hud-cell-val hud-lives-val">▲ ▲ ▲</span>
+            </div>
           </div>
 
-          <div class="hud-stat hud-lives-stat">
-            <span class="hud-score-label hud-lives-label">LIVES:</span>
-            <span id="hud-lives" class="hud-lives-value">▲ ▲ ▲</span>
+          <!-- Center: Level Name (absolute so it never pushes siblings) -->
+          <div id="hud-level-panel" class="hud-group hud-center-group">
+            <span class="hud-cell-label">LEVEL</span>
+            <span id="hud-level-label" class="hud-cell-val hud-level-val">NEON HIGHWAY</span>
           </div>
-        </div>
 
-        <!-- Centre: Level name -->
-        <div id="hud-level-panel" class="hud-panel">
-          <span class="hud-score-label" id="hud-level-label">LEVEL 1</span>
-        </div>
-
-        <!-- Right panel: Dash cooldown -->
-        <div class="hud-panel hud-dash-panel">
-          <span class="hud-score-label" style="font-size:0.7rem; letter-spacing:1px;">DASH</span>
-          <div class="hud-dash-track">
-            <div id="hud-dash-bar"></div>
+          <!-- Right: Dash meter + Pause -->
+          <div class="hud-right-cluster">
+            <div class="hud-group hud-dash-group">
+              <span class="hud-cell-label">DASH</span>
+              <div class="hud-dash-row">
+                <div class="hud-dash-track"><div id="hud-dash-bar"></div></div>
+                <span class="hud-dash-icon">⚡</span>
+              </div>
+            </div>
+            <button id="hud-pause-btn" class="hud-btn" aria-label="Pause Game">⏸</button>
           </div>
-          <span class="hud-dash-icon">⚡</span>
-        </div>
 
-        <!-- Pause Button (for mobile/tablet and clickable on PC) -->
-        <button id="hud-pause-btn" class="hud-panel hud-btn" aria-label="Pause Game">
-          <span>⏸</span>
-        </button>
+        </div><!-- .hud-bar -->
 
-        <!-- Progress bar (bottom of HUD) -->
+        <!-- Progress bar (bottom edge) -->
         <div class="progress-bar-container">
           <div id="progress-bar"></div>
         </div>
@@ -234,6 +241,25 @@
               <div class="settings-row">
                 <span class="settings-label">OPACITY (<span id="opacity-val-label">35%</span>)</span>
                 <input type="range" id="control-opacity-slider" class="neon-slider" min="10" max="100" value="35">
+              </div>
+              <div class="settings-row">
+                <span class="settings-label">BTN SIZE (<span id="btn-size-val-label">M</span>)</span>
+                <input type="range" id="control-btn-size-slider" class="neon-slider" min="48" max="102" value="72" step="2">
+              </div>
+            </div>
+          </div>
+
+          <!-- Display settings -->
+          <div class="mobile-settings-section">
+            <div class="controls-section-title">DISPLAY SETTINGS</div>
+            <div class="mobile-settings-grid">
+              <div class="settings-row">
+                <span class="settings-label">UI SCALE</span>
+                <div class="control-toggle-group">
+                  <button id="ui-scale-small" class="toggle-btn" type="button">SMALL</button>
+                  <button id="ui-scale-default" class="toggle-btn active" type="button">DEFAULT</button>
+                  <button id="ui-scale-large" class="toggle-btn" type="button">LARGE</button>
+                </div>
               </div>
             </div>
           </div>

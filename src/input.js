@@ -75,6 +75,7 @@ export class InputController {
     // Load mobile settings
     this.mobileControlType = localStorage.getItem('neon_runner_mobile_control_type') || 'buttons';
     this.mobileOpacity = parseFloat(localStorage.getItem('neon_runner_mobile_opacity') || '0.35');
+    this.mobileBtnSize = parseInt(localStorage.getItem('neon_runner_mobile_btn_size') || '72', 10);
 
     // Initial orientation/touch capability check for CSS toggles
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -164,6 +165,11 @@ export class InputController {
 
     if (gamepad) {
       gamepad.style.setProperty('--gamepad-opacity', this.mobileOpacity);
+      // Scale button & joystick sizes
+      const sz = this.mobileBtnSize;
+      gamepad.style.setProperty('--touch-btn-size', `${sz}px`);
+      gamepad.style.setProperty('--touch-btn-font', `${(sz * 1.8 / 72).toFixed(2)}rem`);
+      gamepad.style.setProperty('--joystick-size', `${Math.round(sz * 130 / 72)}px`);
     }
   }
 
@@ -179,11 +185,19 @@ export class InputController {
     this._applyMobileSettings();
   }
 
+  updateMobileBtnSize(sizePx) {
+    this.mobileBtnSize = sizePx;
+    localStorage.setItem('neon_runner_mobile_btn_size', String(sizePx));
+    this._applyMobileSettings();
+  }
+
   resetMobileSettings() {
     this.mobileControlType = 'buttons';
     this.mobileOpacity = 0.35;
+    this.mobileBtnSize = 72;
     localStorage.setItem('neon_runner_mobile_control_type', 'buttons');
     localStorage.setItem('neon_runner_mobile_opacity', '0.35');
+    localStorage.setItem('neon_runner_mobile_btn_size', '72');
     this._applyMobileSettings();
   }
 

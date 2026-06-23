@@ -254,6 +254,9 @@ class Game {
     this._setupResizeHandler();
     this._setupInputCallbacks();
 
+    // Restore saved UI scale preference
+    this._applyUIScale(localStorage.getItem('neon_runner_ui_scale') || 'default');
+
     this.setState(GameState.MENU);
 
     this.resize();
@@ -303,7 +306,7 @@ class Game {
     // ── Entry actions ────────────────────────────────────────────────────────
     switch (newState) {
       case GameState.PLAYING:
-        document.getElementById('hud').style.display = 'flex';
+        document.getElementById('hud').style.display = 'block';
         break;
 
       case GameState.PAUSED:
@@ -474,6 +477,31 @@ class Game {
         }
       });
     }
+
+    // Button size slider
+    const btnSizeSlider = $('control-btn-size-slider');
+    const btnSizeValLabel = $('btn-size-val-label');
+    if (btnSizeSlider) {
+      btnSizeSlider.addEventListener('input', (e) => {
+        const sz = parseInt(e.target.value, 10);
+        this.input.updateMobileBtnSize(sz);
+        if (btnSizeValLabel) {
+          btnSizeValLabel.textContent = sz < 62 ? 'S' : sz > 82 ? 'L' : 'M';
+        }
+      });
+    }
+
+    // UI scale toggles
+    const UI_SCALES = ['small', 'default', 'large'];
+    UI_SCALES.forEach((scale) => {
+      const btn = $(`ui-scale-${scale}`);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          this._applyUIScale(scale);
+          this._syncMobileSettingsUI();
+        });
+      }
+    });
   }
 
   // ── Controls Remapping UI ──────────────────────────────────────────────────
@@ -909,12 +937,22 @@ class Game {
     if (btn) btn.textContent = `VOLUME: ${this.audio.volumeLevel}`;
   }
 
+  // ── UI Scale ────────────────────────────────────────────────────────────────
+  _applyUIScale(scale) {
+    document.body.classList.remove('ui-small', 'ui-large');
+    if (scale === 'small') document.body.classList.add('ui-small');
+    if (scale === 'large') document.body.classList.add('ui-large');
+    localStorage.setItem('neon_runner_ui_scale', scale);
+  }
+
   _syncMobileSettingsUI() {
     const $ = (id) => document.getElementById(id);
     const btnStyleButtons = $('control-style-buttons');
     const btnStyleJoystick = $('control-style-joystick');
     const opacitySlider = $('control-opacity-slider');
     const opacityValLabel = $('opacity-val-label');
+    const btnSizeSlider = $('control-btn-size-slider');
+    const btnSizeValLabel = $('btn-size-val-label');
 
     if (btnStyleButtons && btnStyleJoystick) {
       if (this.input.mobileControlType === 'joystick') {
@@ -932,6 +970,18 @@ class Game {
     if (opacityValLabel) {
       opacityValLabel.textContent = `${Math.round(this.input.mobileOpacity * 100)}%`;
     }
+
+    // Sync button size slider
+    const sz = this.input.mobileBtnSize || 72;
+    if (btnSizeSlider) btnSizeSlider.value = sz;
+    if (btnSizeValLabel) btnSizeValLabel.textContent = sz < 62 ? 'S' : sz > 82 ? 'L' : 'M';
+
+    // Sync UI scale toggle buttons
+    const currentScale = localStorage.getItem('neon_runner_ui_scale') || 'default';
+    ['small', 'default', 'large'].forEach((scale) => {
+      const btn = $(`ui-scale-${scale}`);
+      if (btn) btn.classList.toggle('active', scale === currentScale);
+    });
   }
 
   // ── HUD ────────────────────────────────────────────────────────────────────
