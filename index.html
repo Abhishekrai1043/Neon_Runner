@@ -137,6 +137,7 @@
           <button id="resume-btn" class="btn btn-magenta">RESUME SYSTEM</button>
           <button id="pause-volume-btn" class="btn">VOLUME: HIGH</button>
           <button id="pause-controls-btn" class="btn">⌨ CONTROLS</button>
+          <button id="pause-fullscreen-btn" class="btn">⛶ FULLSCREEN</button>
           <button id="pause-new-game-btn" class="btn">NEW GAME</button>
         </div>
 
@@ -219,6 +220,24 @@
           <!-- Dynamic rows injected by JS -->
           <div id="controls-table" class="controls-table"></div>
 
+          <!-- Mobile touch controls settings -->
+          <div class="mobile-settings-section" id="mobile-settings-section">
+            <div class="controls-section-title">MOBILE SETTINGS</div>
+            <div class="mobile-settings-grid">
+              <div class="settings-row">
+                <span class="settings-label">CONTROL STYLE</span>
+                <div class="control-toggle-group">
+                  <button id="control-style-buttons" class="toggle-btn active" type="button">BUTTONS</button>
+                  <button id="control-style-joystick" class="toggle-btn" type="button">JOYSTICK</button>
+                </div>
+              </div>
+              <div class="settings-row">
+                <span class="settings-label">OPACITY (<span id="opacity-val-label">35%</span>)</span>
+                <input type="range" id="control-opacity-slider" class="neon-slider" min="10" max="100" value="35">
+              </div>
+            </div>
+          </div>
+
           <!-- Conflict / status message -->
           <div id="controls-status" class="controls-status" aria-live="polite"></div>
 
@@ -237,6 +256,9 @@
       <div class="control-group">
         <div id="btn-left"  class="touch-btn" role="button" aria-label="Move Left">◀</div>
         <div id="btn-right" class="touch-btn" role="button" aria-label="Move Right">▶</div>
+        <div id="joystick-container" class="joystick-base" style="display: none;">
+          <div id="joystick-handle" class="joystick-thumb"></div>
+        </div>
       </div>
       <!-- Right side: actions -->
       <div class="control-group">

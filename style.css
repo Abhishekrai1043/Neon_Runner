@@ -543,6 +543,21 @@ canvas {
   gap: 18px;
   z-index: 12;
   transition: left 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--neon-magenta) transparent;
+}
+
+.sidebar-panel::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-panel::-webkit-scrollbar-thumb {
+  background: var(--neon-magenta);
+  border-radius: 2px;
 }
 
 .sidebar-panel.active {
@@ -963,6 +978,52 @@ canvas {
   .menu-panel h1 {
     font-size: 2rem;
   }
+
+  /* ── Mobile Sidebar: compact + scrollable ────────────────────────── */
+  .sidebar-panel {
+    width: 100%;
+    max-width: 340px;
+    padding: 20px 18px;
+    gap: 12px;
+  }
+
+  .sidebar-header h1 {
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+  }
+
+  .sidebar-header h2 {
+    font-size: 0.9rem;
+  }
+
+  .sidebar-desc {
+    font-size: 0.76rem;
+    display: none; /* hide tagline to save space */
+  }
+
+  .sidebar-panel .menu-btn-group {
+    gap: 8px;
+  }
+
+  .sidebar-panel .btn {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+
+  .arcade-leaderboard {
+    min-height: 100px;
+    padding: 10px;
+  }
+
+  .sidebar-footer {
+    padding-top: 10px;
+    gap: 2px;
+  }
+
+  .blinking-text {
+    font-size: 0.75rem;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -1267,5 +1328,222 @@ canvas {
     min-height: 28px;
     font-size: 0.65rem;
     padding: 4px 2px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Mobile Custom Controls & Opacity Settings Styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Default gamepad opacity variable */
+#mobile-gamepad {
+  --gamepad-opacity: 0.35;
+}
+
+.touch-btn {
+  opacity: var(--gamepad-opacity, 0.35);
+  transition: transform 0.06s ease, background 0.06s ease, box-shadow 0.06s ease, opacity 0.1s ease !important;
+}
+
+.touch-btn:active {
+  opacity: 1 !important;
+}
+
+/* Joystick Styling */
+.joystick-base {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(13, 2, 23, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px dashed var(--neon-cyan);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.15), inset 0 0 10px rgba(0, 240, 255, 0.05);
+  position: relative;
+  touch-action: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: var(--gamepad-opacity, 0.35);
+  transition: opacity 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.joystick-base.active {
+  opacity: 1 !important;
+  border-color: #fff;
+  border-style: solid;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35), inset 0 0 15px rgba(0, 240, 255, 0.15);
+}
+
+.joystick-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(0, 240, 255, 0.65);
+  border: 2px solid #fff;
+  box-shadow: 0 0 12px var(--neon-cyan);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Mobile Settings section in remapping overlay */
+.mobile-settings-section {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed rgba(0, 240, 255, 0.2);
+  text-align: left;
+}
+
+.controls-section-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--neon-magenta);
+  text-shadow: 0 0 5px var(--neon-magenta);
+  margin-bottom: 14px;
+}
+
+.mobile-settings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.settings-label {
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  letter-spacing: 1.5px;
+  color: #c0b8da;
+}
+
+.control-toggle-group {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-btn {
+  background: rgba(13, 2, 23, 0.6);
+  border: 1.5px solid rgba(0, 240, 255, 0.3);
+  color: #a097bd;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--transition-snappy);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.toggle-btn:hover {
+  border-color: var(--neon-cyan);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.25);
+}
+
+.toggle-btn.active {
+  background: rgba(255, 0, 127, 0.15);
+  border-color: var(--neon-magenta);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(255, 0, 127, 0.4), inset 0 0 6px rgba(255, 0, 127, 0.1);
+  text-shadow: 0 0 5px #fff;
+}
+
+/* Custom Neon Range Slider styling */
+.neon-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 140px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(0, 240, 255, 0.3);
+  outline: none;
+  box-shadow: inset 0 0 4px rgba(0, 240, 255, 0.1);
+  transition: border-color var(--transition-snappy);
+}
+
+.neon-slider:hover {
+  border-color: var(--neon-cyan);
+}
+
+.neon-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  border: 2px solid #fff;
+  box-shadow: 0 0 8px var(--neon-cyan);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.neon-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: #fff;
+}
+
+.neon-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  border: 2px solid #fff;
+  box-shadow: 0 0 8px var(--neon-cyan);
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.neon-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  background: #fff;
+}
+
+/* Landscape compact adjustments for new mobile settings */
+@media (max-height: 500px) {
+  .mobile-settings-section {
+    margin-top: 12px;
+    padding-top: 10px;
+  }
+  .controls-section-title {
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+  }
+  .mobile-settings-grid {
+    gap: 8px;
+  }
+  .toggle-btn {
+    padding: 4px 10px;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+  }
+  .neon-slider {
+    width: 110px;
+    height: 5px;
+  }
+  .neon-slider::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+  }
+  .neon-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
   }
 }

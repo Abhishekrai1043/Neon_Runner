@@ -368,6 +368,15 @@ class Game {
       });
     }
 
+    // Fullscreen button in pause menu
+    const pauseFullscreenBtn = $('pause-fullscreen-btn');
+    if (pauseFullscreenBtn) {
+      pauseFullscreenBtn.addEventListener('click', () => this._toggleFullscreen());
+      // Keep label in sync when user exits fullscreen via keyboard/browser UI
+      document.addEventListener('fullscreenchange', () => this._syncFullscreenBtn());
+      document.addEventListener('webkitfullscreenchange', () => this._syncFullscreenBtn());
+    }
+
     const pauseNewGame = $('pause-new-game-btn');
     if (pauseNewGame) {
       pauseNewGame.addEventListener('click', () => {
@@ -424,7 +433,9 @@ class Game {
       controlsResetBtn.addEventListener('click', () => {
         this._cancelRebind();
         this.input.resetBindings();
+        this.input.resetMobileSettings();
         this._renderControlsTable();
+        this._syncMobileSettingsUI();
         this._showControlsStatus('DEFAULTS RESTORED', 'info', 2000);
       });
     }
@@ -434,6 +445,33 @@ class Game {
     if (controlsOverlay) {
       controlsOverlay.addEventListener('click', (e) => {
         if (e.target === controlsOverlay) this._closeControlsPanel();
+      });
+    }
+
+    // Mobile style toggle event listeners
+    const btnStyleButtons = $('control-style-buttons');
+    const btnStyleJoystick = $('control-style-joystick');
+    if (btnStyleButtons && btnStyleJoystick) {
+      btnStyleButtons.addEventListener('click', () => {
+        this.input.updateMobileControlType('buttons');
+        this._syncMobileSettingsUI();
+      });
+      btnStyleJoystick.addEventListener('click', () => {
+        this.input.updateMobileControlType('joystick');
+        this._syncMobileSettingsUI();
+      });
+    }
+
+    // Mobile opacity slider event listener
+    const opacitySlider = $('control-opacity-slider');
+    const opacityValLabel = $('opacity-val-label');
+    if (opacitySlider) {
+      opacitySlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value) / 100;
+        this.input.updateMobileOpacity(val);
+        if (opacityValLabel) {
+          opacityValLabel.textContent = `${Math.round(val * 100)}%`;
+        }
       });
     }
   }
@@ -448,6 +486,7 @@ class Game {
       panel.setAttribute('aria-hidden', 'false');
     }
     this._renderControlsTable();
+    this._syncMobileSettingsUI();
   }
 
   _closeControlsPanel() {
@@ -845,9 +884,54 @@ class Game {
     });
   }
 
+  // ── Fullscreen ──────────────────────────────────────────────────────────────
+  _toggleFullscreen() {
+    const el = document.documentElement;
+    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    if (!isFS) {
+      if (el.requestFullscreen)       el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    } else {
+      if (document.exitFullscreen)        document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  }
+
+  _syncFullscreenBtn() {
+    const btn = document.getElementById('pause-fullscreen-btn');
+    if (!btn) return;
+    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    btn.textContent = isFS ? '✕ EXIT FULLSCREEN' : '⛶ FULLSCREEN';
+  }
+
   _syncPauseVolumeBtn() {
     const btn = document.getElementById('pause-volume-btn');
     if (btn) btn.textContent = `VOLUME: ${this.audio.volumeLevel}`;
+  }
+
+  _syncMobileSettingsUI() {
+    const $ = (id) => document.getElementById(id);
+    const btnStyleButtons = $('control-style-buttons');
+    const btnStyleJoystick = $('control-style-joystick');
+    const opacitySlider = $('control-opacity-slider');
+    const opacityValLabel = $('opacity-val-label');
+
+    if (btnStyleButtons && btnStyleJoystick) {
+      if (this.input.mobileControlType === 'joystick') {
+        btnStyleJoystick.classList.add('active');
+        btnStyleButtons.classList.remove('active');
+      } else {
+        btnStyleButtons.classList.add('active');
+        btnStyleJoystick.classList.remove('active');
+      }
+    }
+
+    if (opacitySlider) {
+      opacitySlider.value = Math.round(this.input.mobileOpacity * 100);
+    }
+    if (opacityValLabel) {
+      opacityValLabel.textContent = `${Math.round(this.input.mobileOpacity * 100)}%`;
+    }
   }
 
   // ── HUD ────────────────────────────────────────────────────────────────────

@@ -72,6 +72,10 @@ export class InputController {
     // Load (or initialise) bindings
     this.bindings = this._loadBindings();
 
+    // Load mobile settings
+    this.mobileControlType = localStorage.getItem('neon_runner_mobile_control_type') || 'buttons';
+    this.mobileOpacity = parseFloat(localStorage.getItem('neon_runner_mobile_opacity') || '0.35');
+
     // Initial orientation/touch capability check for CSS toggles
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) {
@@ -84,6 +88,7 @@ export class InputController {
 
     this._initKeyboardListeners();
     this._initTouchListeners();
+    this._applyMobileSettings();
   }
 
   // ── Binding Persistence ──────────────────────────────────────────────────
@@ -140,6 +145,48 @@ export class InputController {
     this._saveBindings();
   }
 
+  // ── Mobile Settings & Layout Application ──────────────────────────────────
+  _applyMobileSettings() {
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const joystickBase = document.getElementById('joystick-container');
+    const gamepad = document.getElementById('mobile-gamepad');
+
+    if (this.mobileControlType === 'joystick') {
+      if (btnLeft) btnLeft.style.display = 'none';
+      if (btnRight) btnRight.style.display = 'none';
+      if (joystickBase) joystickBase.style.display = 'flex';
+    } else {
+      if (btnLeft) btnLeft.style.display = 'flex';
+      if (btnRight) btnRight.style.display = 'flex';
+      if (joystickBase) joystickBase.style.display = 'none';
+    }
+
+    if (gamepad) {
+      gamepad.style.setProperty('--gamepad-opacity', this.mobileOpacity);
+    }
+  }
+
+  updateMobileControlType(type) {
+    this.mobileControlType = type;
+    localStorage.setItem('neon_runner_mobile_control_type', type);
+    this._applyMobileSettings();
+  }
+
+  updateMobileOpacity(opacity) {
+    this.mobileOpacity = opacity;
+    localStorage.setItem('neon_runner_mobile_opacity', String(opacity));
+    this._applyMobileSettings();
+  }
+
+  resetMobileSettings() {
+    this.mobileControlType = 'buttons';
+    this.mobileOpacity = 0.35;
+    localStorage.setItem('neon_runner_mobile_control_type', 'buttons');
+    localStorage.setItem('neon_runner_mobile_opacity', '0.35');
+    this._applyMobileSettings();
+  }
+
   // ── Key Dispatch ──────────────────────────────────────────────────────────
   _handleCode(code, isDown) {
     if (this.capturing) return; // Controls UI owns the keyboard right now
@@ -189,6 +236,8 @@ export class InputController {
     const btnRight = document.getElementById('btn-right');
     const btnJump  = document.getElementById('btn-jump');
     const btnDash  = document.getElementById('btn-dash');
+    const joystickBase = document.getElementById('joystick-container');
+    const joystickHandle = document.getElementById('joystick-handle');
 
     // Switch dynamically to touch controls layout upon screen tap
     window.addEventListener('touchstart', () => {
@@ -210,6 +259,111 @@ export class InputController {
     bind(btnRight, (v) => { this.right = v; });
     bind(btnJump,  (v) => { this.jump  = v; });
     bind(btnDash,  (v) => { this.dash = v; this.dashDown = v; });
+
+    // ── Joystick Touch & Mouse Listeners ────────────────────────────────────
+    if (joystickBase && joystickHandle) {
+      let touchId = null;
+      let isMouseDragging = false;
+
+      const updateJoystickPosition = (point) => {
+        const rect = joystickBase.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+
+        let dx = point.clientX - cx;
+        let dy = point.clientY - cy;
+
+        const dist = Math.hypot(dx, dy);
+        const maxDist = rect.width / 2 - 10;
+
+        if (dist > maxDist) {
+          dx = (dx / dist) * maxDist;
+          dy = (dy / dist) * maxDist;
+        }
+
+        joystickHandle.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+
+        // Set horizontal input state based on slider/handle offset (with deadzone)
+        const deadzone = 12;
+        if (dx < -deadzone) {
+          this.left  = true;
+          this.right = false;
+        } else if (dx > deadzone) {
+          this.right = true;
+          this.left  = false;
+        } else {
+          this.left  = false;
+          this.right = false;
+        }
+      };
+
+      const endJoystick = (e) => {
+        if (touchId === null) return;
+        let finished = false;
+        if (e.type === 'touchend' || e.type === 'touchcancel') {
+          for (let i = 0; i < e.changedTouches.length; i++) {
+            if (e.changedTouches[i].identifier === touchId) {
+              finished = true;
+              break;
+            }
+          }
+        } else {
+          finished = true;
+        }
+
+        if (finished) {
+          touchId = null;
+          this.left = false;
+          this.right = false;
+          joystickBase.classList.remove('active');
+          joystickHandle.style.transform = 'translate(-50%, -50%)';
+        }
+      };
+
+      joystickBase.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (touchId !== null) return;
+        const touch = e.changedTouches[0];
+        touchId = touch.identifier;
+        joystickBase.classList.add('active');
+        updateJoystickPosition(touch);
+      }, { passive: false });
+
+      joystickBase.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (touchId === null) return;
+        for (let i = 0; i < e.touches.length; i++) {
+          if (e.touches[i].identifier === touchId) {
+            updateJoystickPosition(e.touches[i]);
+            break;
+          }
+        }
+      }, { passive: false });
+
+      joystickBase.addEventListener('touchend', endJoystick, { passive: false });
+      joystickBase.addEventListener('touchcancel', endJoystick, { passive: false });
+
+      // Mouse drag handlers for simulation on desktop browsers
+      joystickBase.addEventListener('mousedown', (e) => {
+        isMouseDragging = true;
+        joystickBase.classList.add('active');
+        updateJoystickPosition(e);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isMouseDragging) return;
+        updateJoystickPosition(e);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!isMouseDragging) return;
+        isMouseDragging = false;
+        this.left = false;
+        this.right = false;
+        joystickBase.classList.remove('active');
+        joystickHandle.style.transform = 'translate(-50%, -50%)';
+      });
+    }
   }
 
   reset() {
