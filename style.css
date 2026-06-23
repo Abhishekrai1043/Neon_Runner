@@ -790,6 +790,8 @@ canvas {
 .touch-btn {
   width: var(--touch-btn-size, 72px);
   height: var(--touch-btn-size, 72px);
+  min-width: 48px;
+  min-height: 48px;
   border-radius: 50%;
   background: rgba(13, 2, 23, 0.7);
   backdrop-filter: blur(8px);

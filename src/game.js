@@ -18,6 +18,7 @@ import { ParticleSystem }   from './particle.js';
 import { ObstacleManager }  from './obstacles.js';
 import { MeteorShower }     from './meteors.js';
 import { LayoutEditor }     from './layout.js';
+import { getActiveConfig }  from './platforms/router.js';
 
 // ═════════════════════════════════════════════════════════════════════════════
 // GameState Enum
@@ -763,20 +764,51 @@ class Game {
 
   _setupResizeHandler() {
     window.addEventListener('resize', () => this.resize());
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        this.resize();
+        if (this.layoutEditor) {
+          this.layoutEditor.applyLayout();
+        }
+      }, 100);
+    });
   }
 
   resize() {
-    const w   = window.innerWidth;
-    const h   = window.innerHeight;
-    const dpr = window.devicePixelRatio || 1;
+    const config = getActiveConfig();
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    
+    // Performance-Capped High-DPI Resolution Scaler
+    const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
 
-    this.canvas.width  = w * dpr;
-    this.canvas.height = h * dpr;
-    this.canvas.style.width  = w + 'px';
-    this.canvas.style.height = h + 'px';
+    // Aspect Ratio Safe-Zone Matrix (16:9 virtual box)
+    const targetAspect = 16 / 9;
+    const windowAspect = w / h;
 
-    this.scale        = h / this.logicalHeight;
-    this.logicalWidth = w / this.scale;
+    let displayWidth, displayHeight;
+    if (windowAspect > targetAspect) {
+      // Pillarboxing
+      displayHeight = h;
+      displayWidth = h * targetAspect;
+    } else {
+      // Letterboxing
+      displayWidth = w;
+      displayHeight = w / targetAspect;
+    }
+
+    this.canvas.width  = displayWidth * dpr;
+    this.canvas.height = displayHeight * dpr;
+    this.canvas.style.width  = displayWidth + 'px';
+    this.canvas.style.height = displayHeight + 'px';
+    
+    // Center the canvas viewport
+    this.canvas.style.position = 'absolute';
+    this.canvas.style.left = `${(w - displayWidth) / 2}px`;
+    this.canvas.style.top = `${(h - displayHeight) / 2}px`;
+
+    this.scale        = displayHeight / this.logicalHeight;
+    this.logicalWidth = displayWidth / this.scale;
 
     this.camera.resize(this.logicalWidth, this.logicalHeight);
   }

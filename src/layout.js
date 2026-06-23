@@ -1,3 +1,5 @@
+import { getActiveConfig } from './platforms/router.js';
+
 export class LayoutEditor {
   constructor(game) {
     this.game = game;
@@ -147,6 +149,7 @@ export class LayoutEditor {
 
   applyLayout() {
     this.layout = this._loadLayout();
+    const config = getActiveConfig();
     
     this.targets.forEach(id => {
       const el = document.getElementById(id);
@@ -155,12 +158,23 @@ export class LayoutEditor {
       const pos = this.layout[id];
       if (pos) {
         el.style.position = 'absolute';
-        el.style.left = pos.left;
-        el.style.top = pos.top;
-        el.style.right = 'auto';
-        el.style.bottom = 'auto';
-        el.style.transform = 'none';
+        el.style.left = pos.left || 'auto';
+        el.style.top = pos.top || 'auto';
+        el.style.right = pos.right || 'auto';
+        el.style.bottom = pos.bottom || 'auto';
+        el.style.transform = pos.transform || 'none';
         el.style.margin = '0';
+        if (pos.display) el.style.display = pos.display;
+      } else if (config.layout && config.layout[id]) {
+        const cPos = config.layout[id];
+        el.style.position = 'absolute';
+        el.style.left = cPos.left || 'auto';
+        el.style.top = cPos.top || 'auto';
+        el.style.right = cPos.right || 'auto';
+        el.style.bottom = cPos.bottom || 'auto';
+        el.style.transform = cPos.transform || 'none';
+        el.style.margin = '0';
+        if (cPos.display) el.style.display = cPos.display;
       } else {
         // Reset to CSS defaults
         el.style.position = '';
@@ -170,6 +184,7 @@ export class LayoutEditor {
         el.style.bottom = '';
         el.style.transform = '';
         el.style.margin = '';
+        el.style.display = '';
       }
     });
   }

@@ -3,11 +3,26 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="description"
-    content="NEON RUNNER — A retro synthwave arcade platformer. Outrun the neon grid, collect cassettes, and dash through cybernetic obstacles.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <!-- Technical SEO & Meta Matrix -->
   <title>NEON RUNNER: OUTRUN THE GRID</title>
+  <meta name="description" content="NEON RUNNER — A retro synthwave arcade platformer. Outrun the neon grid, collect cassettes, and dash through cybernetic obstacles.">
+  <meta name="keywords" content="neon runner, synthwave game, retro arcade, platformer, web game, html5 game">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://neonrunner.game/">
+  <meta name="theme-color" content="#0d0217">
+  
+  <!-- OpenGraph & Twitter Cards -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="NEON RUNNER: OUTRUN THE GRID">
+  <meta property="og:description" content="A retro synthwave arcade platformer. Outrun the neon grid, collect cassettes, and dash through cybernetic obstacles.">
+  <meta property="og:image" content="/assets/preview.png">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -356,7 +371,7 @@
 
   </div><!-- #game-container -->
 
-  <script type="module" src="src/game.js"></script>
+  <script type="module" src="src/game.js" async defer></script>
 </body>
 
 </html>
