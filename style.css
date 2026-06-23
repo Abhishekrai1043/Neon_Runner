@@ -1345,18 +1345,13 @@ canvas {
     letter-spacing: 2px;
   }
 
-  .menu-panel h2 {
-    font-size: 0.95rem;
-    margin-bottom: 6px;
-  }
-
-  .menu-panel p {
-    display: none !important; /* Hide description paragraph to save vital vertical space in landscape */
-  }
+  .menu-panel h2 { font-size: 1.1rem; margin-bottom: 12px; }
+  .menu-panel p.intro-desc { display: none; }
+  .menu-panel p { font-size: 0.9rem; }
 
   .touch-help-grid {
-    margin-bottom: 12px;
-    padding: 8px 16px;
+    margin-bottom: 8px;
+    padding: 2px 8px;
     gap: 8px;
   }
 

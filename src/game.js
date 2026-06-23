@@ -1059,14 +1059,19 @@ class Game {
       hudLives.textContent = this.lives > 0 ? '▲ '.repeat(this.lives).trim() : 'NONE';
     }
 
-    // Dash cooldown bar
-    const dashBar = $('hud-dash-bar');
-    if (dashBar) {
-      if (!this.player.canDash) {
-        // Dimmed, grayed-out locked state
-        dashBar.style.width      = '100%';
-        dashBar.style.background = 'rgba(80, 80, 80, 0.6)';
-      } else {
+    // Dash cooldown bar and button visibility
+    const dashGroup = document.querySelector('.hud-dash-group');
+    const dashBtn   = document.getElementById('btn-dash');
+    const dashBar   = $('hud-dash-bar');
+
+    if (!this.player.canDash) {
+      if (dashGroup) dashGroup.style.display = 'none';
+      if (dashBtn)   dashBtn.style.display   = 'none';
+    } else {
+      if (dashGroup) dashGroup.style.display = '';
+      if (dashBtn)   dashBtn.style.display   = '';
+
+      if (dashBar) {
         const cooldownPct = this.player.dashCooldown > 0
           ? Math.max(0, 1 - this.player.dashCooldown / this.player.DASH_COOLDOWN)
           : 1;
