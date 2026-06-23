@@ -1066,7 +1066,14 @@ canvas {
 
   .menu-panel {
     padding: 20px 24px;
-    max-width: 90vw;
+    max-width: 85vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .menu-panel::-webkit-scrollbar {
+    display: none;
   }
 
   .menu-panel h1 {
@@ -1836,8 +1843,13 @@ body.ui-large .hud-dash-track { width: 62px; }
 
 @media (max-width: 768px) {
   .start-btn-group {
-    grid-template-columns: 1fr;
-    max-width: 250px;
+    grid-template-columns: 1fr 1fr;
+    max-width: 100%;
+    gap: 10px;
+  }
+  .start-btn-group .btn {
+    padding: 10px 8px;
+    font-size: 0.8rem;
   }
 }
 
