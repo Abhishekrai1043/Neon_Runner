@@ -17,6 +17,7 @@ import { LevelManager }     from './level.js';
 import { ParticleSystem }   from './particle.js';
 import { ObstacleManager }  from './obstacles.js';
 import { MeteorShower }     from './meteors.js';
+import { LayoutEditor }     from './layout.js';
 
 // ═════════════════════════════════════════════════════════════════════════════
 // GameState Enum
@@ -256,6 +257,9 @@ class Game {
 
     // Restore saved UI scale preference
     this._applyUIScale(localStorage.getItem('neon_runner_ui_scale') || 'default');
+
+    this.layoutEditor = new LayoutEditor(this);
+    this.layoutEditor.applyLayout();
 
     this.setState(GameState.MENU);
 
@@ -502,6 +506,19 @@ class Game {
         });
       }
     });
+
+    // Layout Editor button
+    const layoutEditorBtn = $('layout-editor-btn');
+    if (layoutEditorBtn) {
+      layoutEditorBtn.addEventListener('click', () => {
+        // Temporarily close controls panel while editing layout
+        this._closeControlsPanel();
+        this.layoutEditor.openEditor(() => {
+          // Re-open controls panel when done
+          this._openControlsPanel();
+        });
+      });
+    }
   }
 
   // ── Controls Remapping UI ──────────────────────────────────────────────────

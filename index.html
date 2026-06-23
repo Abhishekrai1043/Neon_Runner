@@ -246,6 +246,7 @@
                 <span class="settings-label">BTN SIZE (<span id="btn-size-val-label">M</span>)</span>
                 <input type="range" id="control-btn-size-slider" class="neon-slider" min="48" max="102" value="72" step="2">
               </div>
+              <button id="layout-editor-btn" class="btn btn-magenta" style="width: 100%; margin-top: 6px;">⊞ EDIT LAYOUT</button>
             </div>
           </div>
 
@@ -274,20 +275,33 @@
         </div>
       </div>
 
+      <!-- ═══════════════════ Layout Editor Overlay ═══════════════════ -->
+      <div id="layout-editor-overlay" class="layout-editor-overlay" style="display: none;">
+        <div class="le-grid-bg"></div>
+        <div class="le-bottombar">
+          <button id="le-reset-btn" class="btn">↺ RESET</button>
+          <div class="le-presets">
+            <button class="le-preset-btn" data-preset="2thumb">2-THUMB</button>
+            <button class="le-preset-btn" data-preset="claw">CLAW</button>
+          </div>
+          <button id="le-save-btn" class="btn btn-magenta">✓ DONE</button>
+        </div>
+      </div>
+
     </div><!-- .ui-layer -->
 
     <!-- ═══════════════════ Virtual Mobile Gamepad ═══════════════════ -->
     <div id="mobile-gamepad" aria-label="Virtual Gamepad" role="group">
       <!-- Left side: directional -->
-      <div class="control-group">
+      <div id="mobile-left-group" class="control-group mobile-ctrl-group">
         <div id="btn-left"  class="touch-btn" role="button" aria-label="Move Left">◀</div>
         <div id="btn-right" class="touch-btn" role="button" aria-label="Move Right">▶</div>
-        <div id="joystick-container" class="joystick-base" style="display: none;">
-          <div id="joystick-handle" class="joystick-thumb"></div>
-        </div>
+      </div>
+      <div id="joystick-container" class="joystick-base mobile-ctrl-group" style="display: none;">
+        <div id="joystick-handle" class="joystick-thumb"></div>
       </div>
       <!-- Right side: actions -->
-      <div class="control-group">
+      <div id="mobile-right-group" class="control-group mobile-ctrl-group">
         <div id="btn-dash" class="touch-btn dash-btn"  role="button" aria-label="Dash">⚡</div>
         <div id="btn-jump" class="touch-btn jump-btn"  role="button" aria-label="Jump">▲</div>
       </div>

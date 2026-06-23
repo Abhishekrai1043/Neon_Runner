@@ -734,20 +734,18 @@ canvas {
    ═══════════════════════════════════════════════════════════════════════════ */
 #mobile-gamepad {
   position: absolute;
-  bottom: env(safe-area-inset-bottom, 24px);
-  bottom: max(24px, env(safe-area-inset-bottom));
+  top: 0;
   left: 0;
   width: 100%;
+  height: 100%;
   display: none;         /* Dynamically shown on .is-touch */
-  justify-content: space-between;
-  padding: 0 32px;
   pointer-events: none;
   z-index: 20;
   transition: opacity 0.3s ease;
 }
 
 .is-touch.state-playing #mobile-gamepad {
-  display: flex;
+  display: block;
 }
 
 .is-touch #mobile-gamepad {
@@ -758,6 +756,25 @@ canvas {
   display: flex;
   gap: 16px;
   pointer-events: auto;
+}
+
+/* Default positions for layout editor groups */
+#mobile-left-group {
+  position: absolute;
+  left: 32px;
+  bottom: max(24px, env(safe-area-inset-bottom, 24px));
+}
+
+#mobile-right-group {
+  position: absolute;
+  right: 32px;
+  bottom: max(24px, env(safe-area-inset-bottom, 24px));
+}
+
+#joystick-container.joystick-base {
+  position: absolute;
+  left: 32px;
+  bottom: max(24px, env(safe-area-inset-bottom, 24px));
 }
 
 .touch-btn {
@@ -1682,5 +1699,86 @@ body.ui-large .hud-dash-track { width: 62px; }
 @media (max-width: 400px) {
   #hud-level-panel { display: none !important; }
   .hud-cell { padding: 3px 6px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Layout Editor Overlay
+   ═══════════════════════════════════════════════════════════════════════════ */
+.layout-editor-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 1000;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.le-grid-bg {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.le-bottombar {
+  background: rgba(10, 1, 20, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+.le-presets {
+  display: flex;
+  gap: 12px;
+}
+
+.le-preset-btn {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid var(--neon-cyan);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.le-preset-btn:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.layout-draggable {
+  cursor: grab !important;
+  outline: 2px dashed rgba(255, 255, 255, 0.5) !important;
+  outline-offset: 4px;
+  transition: outline 0.2s, background 0.2s, opacity 0.2s !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  touch-action: none !important; /* critical for pointer events */
+}
+
+.layout-draggable:hover {
+  outline-color: var(--neon-yellow) !important;
+  background: rgba(255, 255, 0, 0.1) !important;
+}
+
+.layout-dragging {
+  cursor: grabbing !important;
+  outline-color: var(--neon-cyan) !important;
+  background: rgba(0, 240, 255, 0.2) !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.5) !important;
+  z-index: 9999 !important;
 }
 
