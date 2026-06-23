@@ -107,14 +107,14 @@ export class LayoutEditor {
 
   promptCancel() {
     const dialog = document.getElementById('layout-cancel-dialog');
-    if (dialog) dialog.style.display = 'flex';
+    if (dialog) dialog.classList.add('active');
   }
 
   closeEditor(save = true) {
     this.isActive = false;
     
     const dialog = document.getElementById('layout-cancel-dialog');
-    if (dialog) dialog.style.display = 'none';
+    if (dialog) dialog.classList.remove('active');
 
     if (this.overlay) this.overlay.style.display = 'none';
 

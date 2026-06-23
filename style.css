@@ -1794,3 +1794,32 @@ body.ui-large .hud-dash-track { width: 62px; }
   z-index: 9999 !important;
 }
 
+.start-btn-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .start-btn-group {
+    grid-template-columns: 1fr;
+    max-width: 250px;
+  }
+}
+
+.about-modal-panel p {
+  display: block !important;
+}
+
+/* Hide scrollbar for about modal */
+.about-modal-panel::-webkit-scrollbar {
+  display: none;
+}
+.about-modal-panel {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

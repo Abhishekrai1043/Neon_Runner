@@ -301,15 +301,13 @@ export class Player {
     }
 
     // ── Gravity ───────────────────────────────────────────────────────────
-    if (!this.grounded) {
-      if (isDashing) {
-        // Greatly reduced gravity during dash window
-        this.vy += this.gravity * 0.12 * dtFactor;
-        if (this.vy > 3) this.vy = 3;
-      } else {
-        this.vy += this.gravity * dtFactor;
-        if (this.vy > this.terminalVelocity) this.vy = this.terminalVelocity;
-      }
+    if (isDashing) {
+      // Greatly reduced gravity during dash window
+      this.vy += this.gravity * 0.12 * dtFactor;
+      if (this.vy > 3) this.vy = 3;
+    } else {
+      this.vy += this.gravity * dtFactor;
+      if (this.vy > this.terminalVelocity) this.vy = this.terminalVelocity;
     }
 
     // ── Jump ──────────────────────────────────────────────────────────────

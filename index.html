@@ -128,7 +128,10 @@
           </div>
         </div>
 
-        <button id="start-btn" class="btn btn-magenta">INITIALIZE SYSTEM</button>
+        <div class="start-btn-group">
+          <button id="start-btn" class="btn btn-magenta">INITIALIZE SYSTEM</button>
+          <button id="start-about-btn" class="btn">ABOUT</button>
+        </div>
       </div>
 
       <!-- ═══════════════════ Pause Sidebar ═══════════════════ -->
@@ -144,6 +147,7 @@
           <button id="resume-btn" class="btn btn-magenta">RESUME SYSTEM</button>
           <button id="pause-volume-btn" class="btn">VOLUME: HIGH</button>
           <button id="pause-controls-btn" class="btn">⌨ CONTROLS</button>
+          <button id="pause-about-btn" class="btn">ABOUT</button>
           <button id="pause-fullscreen-btn" class="btn">⛶ FULLSCREEN</button>
           <button id="pause-new-game-btn" class="btn">NEW GAME</button>
         </div>
@@ -195,9 +199,9 @@
             <input
               type="text"
               id="arcade-name-input"
-              maxlength="3"
-              placeholder="AAA"
-              value="AAA"
+              maxlength="7"
+              placeholder="PLAYER1"
+              value="PLAYER1"
               autocomplete="off"
               spellcheck="false"
               class="arcade-input"
@@ -289,13 +293,34 @@
       </div>
 
       <!-- ═══════════════════ Layout Editor Cancel Dialog ═══════════════════ -->
-      <div id="layout-cancel-dialog" class="menu-panel layer-modal" role="dialog" style="display: none; z-index: 2000;">
+      <div id="layout-cancel-dialog" class="menu-panel layer-modal" role="dialog" style="z-index: 2000;">
         <h2 style="color: var(--neon-magenta); text-shadow: 0 0 10px var(--neon-magenta);">SAVE ALTERED LAYOUT?</h2>
         <p style="margin: 20px 0; text-align: center;">Do you want to save your layout changes before exiting?</p>
         <div class="menu-btn-group" style="flex-direction: row; justify-content: center; gap: 20px;">
           <button id="btn-dialog-discard" class="btn">DISCARD</button>
           <button id="btn-dialog-save" class="btn btn-magenta">SAVE</button>
         </div>
+      </div>
+
+      <!-- ═══════════════════ About Modal ═══════════════════ -->
+      <div id="about-modal" class="menu-panel layer-modal about-modal-panel" role="dialog" style="z-index: 2000; max-height: 85vh; overflow-y: auto; padding: 30px; width: 90%; max-width: 500px; text-align: left;">
+        <h2 style="color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); font-size: 1.5rem; margin-bottom: 20px; text-align: center;">🌌 ABOUT THE GAME & DEVELOPER</h2>
+        
+        <h3 style="color: var(--neon-magenta); text-shadow: 0 0 8px var(--neon-magenta); margin-bottom: 10px;">🚀 My First Leap Into Game Dev</h3>
+        <p style="margin-bottom: 15px; font-size: 0.9rem; line-height: 1.5;">Welcome to NeonRunner! This game marks a massive milestone for me—it is my very first official game project. Building this was an incredible journey of combining core software engineering principles, long nights of hard work, and dedicated time with cutting-edge AI development tools.</p>
+        <p style="margin-bottom: 25px; font-size: 0.9rem; line-height: 1.5;">By leveraging AI as a powerful collaborative partner, I was able to accelerate my development workflow, refine complex physics math, and bring this fast-paced, cross-platform arcade experience to life exactly the way I envisioned it.</p>
+        
+        <h3 style="color: var(--neon-yellow); text-shadow: 0 0 8px var(--neon-yellow); margin-bottom: 10px;">👨💻 About Me</h3>
+        <p style="margin-bottom: 25px; font-size: 0.9rem; line-height: 1.5;">I am a passionate developer deeply interested in the intersections of Web Development, AI Engineering, and Interactive Design. I love building systems that are highly optimized, responsive, and genuinely fun to interact with. This project represents my dedication to mastering fluid physics engine mechanics, responsive multi-platform layout design, and clean, future-proof architecture.</p>
+        
+        <h3 style="color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); margin-bottom: 10px;">⚡ Support the Journey & Stay Tuned!</h3>
+        <p style="margin-bottom: 15px; font-size: 0.9rem; line-height: 1.5;">As an independent creator, your feedback and support are what keep me moving forward. If you enjoyed dodging lasers, hitting crazy dashes, or customizing your layout, please consider showing some love!</p>
+        <p style="margin-bottom: 10px; font-size: 0.9rem; line-height: 1.5; font-weight: bold; text-align: center;">Share your high scores and clips on Instagram!</p>
+        <p style="margin-bottom: 20px; font-size: 1.2rem; color: var(--neon-magenta); text-shadow: 0 0 8px var(--neon-magenta); text-align: center; letter-spacing: 1px;">Tag me: @ug_club2010</p>
+        <p style="margin-bottom: 15px; font-size: 0.9rem; line-height: 1.5;">Seeing players engage with my work gives me the ultimate motivation to push the limits, optimize performance even further, and roll out more fun, exciting, and major feature updates in the near future!</p>
+        <p style="margin-bottom: 30px; font-size: 0.9rem; line-height: 1.5; text-align: center; color: var(--neon-cyan);">Thank you for playing, and keep chasing that high score!</p>
+        
+        <button id="close-about-btn" class="btn btn-magenta" style="width: 100%;">CLOSE</button>
       </div>
 
     </div><!-- .ui-layer -->

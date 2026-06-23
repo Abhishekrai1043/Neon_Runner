@@ -364,6 +364,30 @@ class Game {
       this._startGame();
     });
 
+    const startAboutBtn = $('start-about-btn');
+    if (startAboutBtn) {
+      startAboutBtn.addEventListener('click', () => {
+        const modal = $('about-modal');
+        if (modal) modal.classList.add('active');
+      });
+    }
+
+    const pauseAboutBtn = $('pause-about-btn');
+    if (pauseAboutBtn) {
+      pauseAboutBtn.addEventListener('click', () => {
+        const modal = $('about-modal');
+        if (modal) modal.classList.add('active');
+      });
+    }
+
+    const closeAboutBtn = $('close-about-btn');
+    if (closeAboutBtn) {
+      closeAboutBtn.addEventListener('click', () => {
+        const modal = $('about-modal');
+        if (modal) modal.classList.remove('active');
+      });
+    }
+
     $('resume-btn').addEventListener('click', () => this._resumeGame());
 
     $('restart-btn').addEventListener('click', () => {
@@ -410,7 +434,7 @@ class Game {
     if (arcadeSubmit) {
       arcadeSubmit.addEventListener('click', () => {
         const input    = $('arcade-name-input');
-        const initials = input ? input.value : 'AAA';
+        const initials = input ? input.value : 'PLAYER1';
         this._submitHighScore(initials);
       });
     }
@@ -425,7 +449,7 @@ class Game {
         }
         // Force uppercase as user types
         setTimeout(() => {
-          arcadeInput.value = arcadeInput.value.toUpperCase().slice(0, 3);
+          arcadeInput.value = arcadeInput.value.toUpperCase().slice(0, 7);
         }, 0);
       });
     }
@@ -732,7 +756,7 @@ class Game {
     // Flush any pending high score from previous session
     if (this.pendingHighScore) {
       const input    = document.getElementById('arcade-name-input');
-      const initials = input ? input.value : 'AAA';
+      const initials = input ? input.value : 'PLAYER1';
       this._saveHighScore(this.score, initials);
       this.pendingHighScore = false;
     }
@@ -843,7 +867,7 @@ class Game {
     const arcadeInput = $('arcade-name-input');
     if (arcadeInput) {
       arcadeInput.disabled = false;
-      arcadeInput.value    = localStorage.getItem('neon_runner_last_initials') || 'AAA';
+      arcadeInput.value    = localStorage.getItem('neon_runner_last_initials') || 'PLAYER1';
     }
 
     $('final-score').textContent     = Math.floor(this.score).toLocaleString();
@@ -894,7 +918,7 @@ class Game {
     const feedback = document.getElementById('arcade-submit-feedback');
     if (feedback) {
       feedback.style.display = 'block';
-      const name = (initials || 'AAA').toUpperCase().slice(0, 3);
+      const name = (initials || 'PLAYER1').toUpperCase().slice(0, 7);
       feedback.textContent   = `"${name}" SYNCED TO GRID`;
     }
     const submitBtn = document.getElementById('arcade-submit-btn');
