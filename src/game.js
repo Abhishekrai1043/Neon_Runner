@@ -430,6 +430,12 @@ class Game {
       hudFullscreenBtn.addEventListener('click', () => this._toggleFullscreen());
     }
 
+    // Fullscreen button in Start Menu
+    const startFullscreenBtn = $('start-fullscreen-btn');
+    if (startFullscreenBtn) {
+      startFullscreenBtn.addEventListener('click', () => this._toggleFullscreen());
+    }
+
     const pauseNewGame = $('pause-new-game-btn');
     if (pauseNewGame) {
       pauseNewGame.addEventListener('click', () => {

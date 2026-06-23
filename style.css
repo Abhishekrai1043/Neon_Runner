@@ -1093,13 +1093,16 @@ canvas {
     font-size: 0.85rem;
   }
 
-  #game-over-menu.keyboard-active > *:not(.arcade-entry) {
+  #game-over-menu.keyboard-active > *:not(#arcade-name-entry) {
     display: none !important;
   }
   #game-over-menu.keyboard-active {
     top: 25%;
     transform: translate(-50%, -25%) scale(1);
   }
+
+  .keyboard-instructions { display: none !important; }
+  .touch-instructions { display: block !important; }
 
   /* ── Mobile Sidebar: compact + scrollable ────────────────────────── */
   .sidebar-panel {
