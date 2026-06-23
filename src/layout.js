@@ -60,15 +60,16 @@ export class LayoutEditor {
 
   _loadLayout() {
     try {
-      const saved = localStorage.getItem('neon_runner_layout');
-      return saved ? JSON.parse(saved) : {};
+      const saved = localStorage.getItem('neon_runner_layout_v3');
+      if (saved) return JSON.parse(saved);
+      return {};
     } catch (e) {
       return {};
     }
   }
 
   _saveLayout() {
-    localStorage.setItem('neon_runner_layout', JSON.stringify(this.layout));
+    localStorage.setItem('neon_runner_layout_v3', JSON.stringify(this.layout));
   }
 
   openEditor(onDoneCallback) {
