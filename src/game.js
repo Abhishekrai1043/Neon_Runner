@@ -342,18 +342,37 @@ class Game {
   // ── Bootstrap ──────────────────────────────────────────────────────────────
   _setupInputCallbacks() {
     this.input.onPause = () => {
-      // Intercept ESC / Pause if layout editor is active
+      // 1. Close About Modal if open
+      const aboutModal = document.getElementById('about-modal');
+      if (aboutModal && aboutModal.classList.contains('active')) {
+        aboutModal.classList.remove('active');
+        return;
+      }
+
+      // 2. Layout Editor has its own interception
       if (this.layoutEditor && this.layoutEditor.isActive) {
         this.layoutEditor.promptCancel();
         return;
       }
 
+      // 3. Normal Pause / Resume
       if (this._state === GameState.PLAYING) {
         this.setState(GameState.PAUSED);
       } else if (this._state === GameState.PAUSED) {
         this._resumeGame();
       }
     };
+
+    // Mobile hardware back button capture
+    window.addEventListener('popstate', (e) => {
+      if (this.input && this.input.onPause) {
+        this.input.onPause();
+      }
+      // Trap the history state so subsequent back presses are also caught
+      history.pushState(null, '', location.href);
+    });
+    // Initial trap
+    history.pushState(null, '', location.href);
   }
 
   _setupUIHandlers() {
@@ -405,13 +424,10 @@ class Game {
       });
     }
 
-    // Fullscreen button in pause menu
-    const pauseFullscreenBtn = $('pause-fullscreen-btn');
-    if (pauseFullscreenBtn) {
-      pauseFullscreenBtn.addEventListener('click', () => this._toggleFullscreen());
-      // Keep label in sync when user exits fullscreen via keyboard/browser UI
-      document.addEventListener('fullscreenchange', () => this._syncFullscreenBtn());
-      document.addEventListener('webkitfullscreenchange', () => this._syncFullscreenBtn());
+    // Fullscreen button in HUD
+    const hudFullscreenBtn = $('hud-fullscreen-btn');
+    if (hudFullscreenBtn) {
+      hudFullscreenBtn.addEventListener('click', () => this._toggleFullscreen());
     }
 
     const pauseNewGame = $('pause-new-game-btn');
@@ -973,10 +989,7 @@ class Game {
   }
 
   _syncFullscreenBtn() {
-    const btn = document.getElementById('pause-fullscreen-btn');
-    if (!btn) return;
-    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
-    btn.textContent = isFS ? '✕ EXIT FULLSCREEN' : '⛶ FULLSCREEN';
+    // Label sync is no longer needed as the HUD button is just an icon
   }
 
   _syncPauseVolumeBtn() {
