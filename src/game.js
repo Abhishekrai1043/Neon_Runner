@@ -782,30 +782,19 @@ class Game {
     // Performance-Capped High-DPI Resolution Scaler
     const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
 
-    // Aspect Ratio Safe-Zone Matrix (16:9 virtual box)
-    const targetAspect = 16 / 9;
-    const windowAspect = w / h;
-
-    let displayWidth, displayHeight;
-    if (windowAspect > targetAspect) {
-      // Pillarboxing
-      displayHeight = h;
-      displayWidth = h * targetAspect;
-    } else {
-      // Letterboxing
-      displayWidth = w;
-      displayHeight = w / targetAspect;
-    }
+    // Full Viewport (Un-cropped dynamic scaling)
+    const displayWidth = w;
+    const displayHeight = h;
 
     this.canvas.width  = displayWidth * dpr;
     this.canvas.height = displayHeight * dpr;
     this.canvas.style.width  = displayWidth + 'px';
     this.canvas.style.height = displayHeight + 'px';
     
-    // Center the canvas viewport
+    // Anchor canvas
     this.canvas.style.position = 'absolute';
-    this.canvas.style.left = `${(w - displayWidth) / 2}px`;
-    this.canvas.style.top = `${(h - displayHeight) / 2}px`;
+    this.canvas.style.left = '0px';
+    this.canvas.style.top = '0px';
 
     this.scale        = displayHeight / this.logicalHeight;
     this.logicalWidth = displayWidth / this.scale;
