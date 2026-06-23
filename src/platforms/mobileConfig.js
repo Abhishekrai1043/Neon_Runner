@@ -5,13 +5,13 @@ export const mobileConfig = {
   assetScale: 0.8,
   touchMargin: 12,
   layout: {
-    'btn-left': { display: 'flex', left: '2vw', top: 'calc(100vh - 18vh)' },
-    'btn-right': { display: 'flex', left: '18vw', top: 'calc(100vh - 18vh)' },
-    'btn-dash': { display: 'flex', left: 'calc(100vw - 32vw)', top: 'calc(100vh - 18vh)' },
-    'btn-jump': { display: 'flex', left: 'calc(100vw - 16vw)', top: 'calc(100vh - 18vh)' },
-    'joystick-container': { left: '4vw', top: 'calc(100vh - 20vh)' },
-    'hud-left-group': { left: '2vw', top: '2vh' },
-    'hud-right-cluster': { right: '2vw', top: '2vh', left: 'auto' },
-    'hud-level-panel': { left: '50%', top: '2vh', transform: 'translateX(-50%)' }
+    'btn-left': { display: 'flex', left: 'max(32px, env(safe-area-inset-left))', top: 'auto', bottom: 'max(32px, env(safe-area-inset-bottom))' },
+    'btn-right': { display: 'flex', left: 'max(130px, calc(env(safe-area-inset-left) + 98px))', top: 'auto', bottom: 'max(32px, env(safe-area-inset-bottom))' },
+    'btn-dash': { display: 'flex', right: 'max(130px, calc(env(safe-area-inset-right) + 98px))', left: 'auto', top: 'auto', bottom: 'max(32px, env(safe-area-inset-bottom))' },
+    'btn-jump': { display: 'flex', right: 'max(32px, env(safe-area-inset-right))', left: 'auto', top: 'auto', bottom: 'max(32px, env(safe-area-inset-bottom))' },
+    'joystick-container': { left: 'max(32px, env(safe-area-inset-left))', top: 'auto', bottom: 'max(32px, env(safe-area-inset-bottom))' },
+    'hud-left-group': { left: 'max(16px, env(safe-area-inset-left))', top: 'max(16px, env(safe-area-inset-top))' },
+    'hud-right-cluster': { right: 'max(16px, env(safe-area-inset-right))', left: 'auto', top: 'max(16px, env(safe-area-inset-top))' },
+    'hud-level-panel': { left: '50%', top: 'max(16px, env(safe-area-inset-top))', transform: 'translateX(-50%)' }
   }
 };
